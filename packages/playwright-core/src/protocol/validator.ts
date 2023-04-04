@@ -1194,6 +1194,23 @@ scheme.PageStopJSCoverageResult = tObject({
     })),
   })),
 });
+scheme.PageTakeJSCoverageParams = tOptional(tObject({}));
+scheme.PageTakeJSCoverageResult = tObject({
+  entries: tArray(tObject({
+    url: tString,
+    scriptId: tString,
+    source: tOptional(tString),
+    functions: tArray(tObject({
+      functionName: tString,
+      isBlockCoverage: tBoolean,
+      ranges: tArray(tObject({
+        startOffset: tNumber,
+        endOffset: tNumber,
+        count: tNumber,
+      })),
+    })),
+  })),
+});
 scheme.PageStartCSSCoverageParams = tObject({
   resetOnNavigation: tOptional(tBoolean),
 });

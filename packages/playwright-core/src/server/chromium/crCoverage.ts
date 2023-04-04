@@ -39,6 +39,10 @@ export class CRCoverage {
     return await this._jsCoverage.stop();
   }
 
+  async takeJSCoverage(): Promise<channels.PageTakeJSCoverageResult> {
+    return await this._jsCoverage.take();
+  }
+
   async startCSSCoverage(options: channels.PageStartCSSCoverageParams) {
     return await this._cssCoverage.start(options);
   }
@@ -110,6 +114,25 @@ class JSCoverage {
     const response = await this._client._sendMayFail('Debugger.getScriptSource', { scriptId: event.scriptId });
     if (response)
       this._scriptSources.set(event.scriptId, response.scriptSource);
+  }
+
+  async take(): Promise<channels.PageTakeJSCoverageResult> {
+    assert(this._enabled, 'JSCoverage is not enabled');
+    const profileResponse = await this._client.send('Profiler.takePreciseCoverage');
+    const coverage: channels.PageTakeJSCoverageResult = { entries: [] };
+    for (const entry of profileResponse.result) {
+      if (!this._scriptIds.has(entry.scriptId))
+        continue;
+      if (!entry.url && !this._reportAnonymousScripts)
+        continue;
+      const source = this._scriptSources.get(entry.scriptId);
+      if (source)
+        coverage.entries.push({ ...entry, source });
+      else
+        coverage.entries.push(entry);
+    }
+    return coverage;
+
   }
 
   async stop(): Promise<channels.PageStopJSCoverageResult> {

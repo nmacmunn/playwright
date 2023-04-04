@@ -16317,6 +16317,43 @@ export interface Coverage {
       }>;
     }>;
   }>>;
+
+  /**
+   * Returns the array of coverage reports for all scripts
+   */
+  takeJSCoverage(): Promise<Array<{
+    /**
+     * Script URL
+     */
+    url: string;
+
+    /**
+     * Script ID
+     */
+    scriptId: string;
+
+    /**
+     * Script content, if applicable.
+     */
+    source?: string;
+
+    /**
+     * V8-specific coverage format.
+     */
+    functions: Array<{
+      functionName: string;
+
+      isBlockCoverage: boolean;
+
+      ranges: Array<{
+        count: number;
+
+        startOffset: number;
+
+        endOffset: number;
+      }>;
+    }>;
+  }>>;
 }
 
 /**

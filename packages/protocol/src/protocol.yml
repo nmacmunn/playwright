@@ -1533,6 +1533,32 @@ Page:
                           endOffset: number
                           count: number
 
+    takeJSCoverage:
+      returns:
+        entries:
+          type: array
+          items:
+            type: object
+            properties:
+              url: string
+              scriptId: string
+              source: string?
+              functions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    functionName: string
+                    isBlockCoverage: boolean
+                    ranges:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          startOffset: number
+                          endOffset: number
+                          count: number
+
     startCSSCoverage:
       parameters:
         resetOnNavigation: boolean?

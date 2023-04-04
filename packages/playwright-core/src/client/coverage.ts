@@ -32,6 +32,10 @@ export class Coverage implements api.Coverage {
     return (await this._channel.stopJSCoverage()).entries;
   }
 
+  async takeJSCoverage(): Promise<channels.PageTakeJSCoverageResult['entries']> {
+    return (await this._channel.takeJSCoverage()).entries;
+  }
+
   async startCSSCoverage(options: channels.PageStartCSSCoverageOptions = {}) {
     await this._channel.startCSSCoverage(options);
   }

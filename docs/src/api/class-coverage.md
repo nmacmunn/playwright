@@ -99,3 +99,19 @@ Returns the array of coverage reports for all scripts
 JavaScript Coverage doesn't include anonymous scripts by default. However, scripts with sourceURLs are
 reported.
 :::
+
+## async method: Coverage.takeJSCoverage
+* since: v1.33
+- returns: <[Array]<[Object]>>
+  - `url` <[string]> Script URL
+  - `scriptId` <[string]> Script ID
+  - `source` ?<[string]> Script content, if applicable.
+  - `functions` <[Array]<[Object]>> V8-specific coverage format.
+    - `functionName` <[string]>
+    - `isBlockCoverage` <[boolean]>
+    - `ranges` <[Array]<[Object]>>
+      - `count` <[int]>
+      - `startOffset` <[int]>
+      - `endOffset` <[int]>
+
+Returns the array of coverage reports for all scripts

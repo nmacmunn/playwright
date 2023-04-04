@@ -286,6 +286,11 @@ export class PageDispatcher extends Dispatcher<Page, channels.PageChannel, Brows
     return await coverage.stopJSCoverage();
   }
 
+  async takeJSCoverage(params: channels.PageTakeJSCoverageParams, metadata: CallMetadata): Promise<channels.PageTakeJSCoverageResult> {
+    const coverage = this._page.coverage as CRCoverage;
+    return await coverage.takeJSCoverage();
+  }
+
   async startCSSCoverage(params: channels.PageStartCSSCoverageParams, metadata: CallMetadata): Promise<void> {
     const coverage = this._page.coverage as CRCoverage;
     await coverage.startCSSCoverage(params);
