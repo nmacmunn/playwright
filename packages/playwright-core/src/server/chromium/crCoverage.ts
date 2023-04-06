@@ -35,12 +35,8 @@ export class CRCoverage {
     return await this._jsCoverage.start(options);
   }
 
-  async stopJSCoverage(): Promise<channels.PageStopJSCoverageResult> {
-    return await this._jsCoverage.stop();
-  }
-
-  async takeJSCoverage(): Promise<channels.PageTakeJSCoverageResult> {
-    return await this._jsCoverage.take();
+  async takeJSCoverage(options: channels.PageTakeJSCoverageParams): Promise<channels.PageTakeJSCoverageResult> {
+    return await this._jsCoverage.take(options);
   }
 
   async startCSSCoverage(options: channels.PageStartCSSCoverageParams) {
@@ -116,37 +112,24 @@ class JSCoverage {
       this._scriptSources.set(event.scriptId, response.scriptSource);
   }
 
-  async take(): Promise<channels.PageTakeJSCoverageResult> {
+  async take(options: channels.PageTakeJSCoverageParams): Promise<channels.PageTakeJSCoverageResult> {
     assert(this._enabled, 'JSCoverage is not enabled');
-    const profileResponse = await this._client.send('Profiler.takePreciseCoverage');
-    const coverage: channels.PageTakeJSCoverageResult = { entries: [] };
-    for (const entry of profileResponse.result) {
-      if (!this._scriptIds.has(entry.scriptId))
-        continue;
-      if (!entry.url && !this._reportAnonymousScripts)
-        continue;
-      const source = this._scriptSources.get(entry.scriptId);
-      if (source)
-        coverage.entries.push({ ...entry, source });
-      else
-        coverage.entries.push(entry);
+    const {
+      stop = false,
+    } = options;
+    const profileResponsePromise = this._client.send('Profiler.takePreciseCoverage');
+    if (stop) {
+      this._enabled = false;
+      await Promise.all([
+        this._client.send('Profiler.stopPreciseCoverage'),
+        this._client.send('Profiler.disable'),
+        this._client.send('Debugger.disable'),
+      ]);
+      eventsHelper.removeEventListeners(this._eventListeners);
     }
-    return coverage;
+    const profileResponse = await profileResponsePromise;
 
-  }
-
-  async stop(): Promise<channels.PageStopJSCoverageResult> {
-    assert(this._enabled, 'JSCoverage is not enabled');
-    this._enabled = false;
-    const [profileResponse] = await Promise.all([
-      this._client.send('Profiler.takePreciseCoverage'),
-      this._client.send('Profiler.stopPreciseCoverage'),
-      this._client.send('Profiler.disable'),
-      this._client.send('Debugger.disable'),
-    ] as const);
-    eventsHelper.removeEventListeners(this._eventListeners);
-
-    const coverage: channels.PageStopJSCoverageResult = { entries: [] };
+    const coverage: channels.PageTakeJSCoverageResult = { entries: [] };
     for (const entry of profileResponse.result) {
       if (!this._scriptIds.has(entry.scriptId))
         continue;

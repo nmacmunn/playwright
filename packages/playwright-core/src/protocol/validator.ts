@@ -1177,24 +1177,9 @@ scheme.PageStartJSCoverageParams = tObject({
   reportAnonymousScripts: tOptional(tBoolean),
 });
 scheme.PageStartJSCoverageResult = tOptional(tObject({}));
-scheme.PageStopJSCoverageParams = tOptional(tObject({}));
-scheme.PageStopJSCoverageResult = tObject({
-  entries: tArray(tObject({
-    url: tString,
-    scriptId: tString,
-    source: tOptional(tString),
-    functions: tArray(tObject({
-      functionName: tString,
-      isBlockCoverage: tBoolean,
-      ranges: tArray(tObject({
-        startOffset: tNumber,
-        endOffset: tNumber,
-        count: tNumber,
-      })),
-    })),
-  })),
+scheme.PageTakeJSCoverageParams = tObject({
+  stop: tOptional(tBoolean),
 });
-scheme.PageTakeJSCoverageParams = tOptional(tObject({}));
 scheme.PageTakeJSCoverageResult = tObject({
   entries: tArray(tObject({
     url: tString,

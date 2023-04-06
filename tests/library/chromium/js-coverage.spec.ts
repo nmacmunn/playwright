@@ -84,3 +84,19 @@ it('should not hang when there is a debugger statement', async function({ page, 
   });
   await page.coverage.stopJSCoverage();
 });
+
+it('should take coverage without stopping', async function({ page, server }) {
+  await page.coverage.startJSCoverage();
+  await page.goto(server.PREFIX + '/jscoverage/multiple.html');
+  const coverage = await page.coverage.takeJSCoverage();
+  await page.coverage.stopJSCoverage();
+  expect(coverage.length).toBe(2);
+});
+
+it('should reset coverage when taken', async function({ page, server }) {
+  await page.coverage.startJSCoverage();
+  await page.goto(server.PREFIX + '/jscoverage/multiple.html');
+  await page.coverage.takeJSCoverage();
+  const coverage = await page.coverage.stopJSCoverage();
+  expect(coverage.length).toBe(0);
+});

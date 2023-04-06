@@ -1746,8 +1746,7 @@ export interface PageChannel extends PageEventTarget, EventTargetChannel {
   accessibilitySnapshot(params: PageAccessibilitySnapshotParams, metadata?: CallMetadata): Promise<PageAccessibilitySnapshotResult>;
   pdf(params: PagePdfParams, metadata?: CallMetadata): Promise<PagePdfResult>;
   startJSCoverage(params: PageStartJSCoverageParams, metadata?: CallMetadata): Promise<PageStartJSCoverageResult>;
-  stopJSCoverage(params?: PageStopJSCoverageParams, metadata?: CallMetadata): Promise<PageStopJSCoverageResult>;
-  takeJSCoverage(params?: PageTakeJSCoverageParams, metadata?: CallMetadata): Promise<PageTakeJSCoverageResult>;
+  takeJSCoverage(params: PageTakeJSCoverageParams, metadata?: CallMetadata): Promise<PageTakeJSCoverageResult>;
   startCSSCoverage(params: PageStartCSSCoverageParams, metadata?: CallMetadata): Promise<PageStartCSSCoverageResult>;
   stopCSSCoverage(params?: PageStopCSSCoverageParams, metadata?: CallMetadata): Promise<PageStopCSSCoverageResult>;
   bringToFront(params?: PageBringToFrontParams, metadata?: CallMetadata): Promise<PageBringToFrontResult>;
@@ -2151,26 +2150,12 @@ export type PageStartJSCoverageOptions = {
   reportAnonymousScripts?: boolean,
 };
 export type PageStartJSCoverageResult = void;
-export type PageStopJSCoverageParams = {};
-export type PageStopJSCoverageOptions = {};
-export type PageStopJSCoverageResult = {
-  entries: {
-    url: string,
-    scriptId: string,
-    source?: string,
-    functions: {
-      functionName: string,
-      isBlockCoverage: boolean,
-      ranges: {
-        startOffset: number,
-        endOffset: number,
-        count: number,
-      }[],
-    }[],
-  }[],
+export type PageTakeJSCoverageParams = {
+  stop?: boolean,
 };
-export type PageTakeJSCoverageParams = {};
-export type PageTakeJSCoverageOptions = {};
+export type PageTakeJSCoverageOptions = {
+  stop?: boolean,
+};
 export type PageTakeJSCoverageResult = {
   entries: {
     url: string,

@@ -28,12 +28,12 @@ export class Coverage implements api.Coverage {
     await this._channel.startJSCoverage(options);
   }
 
-  async stopJSCoverage(): Promise<channels.PageStopJSCoverageResult['entries']> {
-    return (await this._channel.stopJSCoverage()).entries;
+  async stopJSCoverage(): Promise<channels.PageTakeJSCoverageResult['entries']> {
+    return (await this._channel.takeJSCoverage({ stop: true })).entries;
   }
 
   async takeJSCoverage(): Promise<channels.PageTakeJSCoverageResult['entries']> {
-    return (await this._channel.takeJSCoverage()).entries;
+    return (await this._channel.takeJSCoverage({ stop: false })).entries;
   }
 
   async startCSSCoverage(options: channels.PageStartCSSCoverageOptions = {}) {
